@@ -1,0 +1,108 @@
+package
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+)
+
+// 	Short: "Hugo is a very fast static site generator",
+// 	Long: `A Fast and Flexible Static Site Generator built with
+// 				  love by spf13 and friends in Go.
+// 				  Complete documentation is available at https://gohugo.io/documentation/`,
+// 	Run: func(cmd *cobra.Command, args []string) {
+// 		// Do Stuff Here
+// 	},
+// }
+
+var Mode string
+var StoryPath string
+var DailyPath string
+
+var (
+	// Used for flags.
+	cfgFile     string = "./config.yaml"
+	userLicense string
+
+	rootCmd = &cobra.Command{
+		Use:   "start",
+		Short: "to start learning",
+		Long:  `lybatu long`,
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("rootcmd arg of set: %v\n", args)
+			fmt.Println("this is start command line of English Speaking Distribution")
+		},
+	}
+
+	versionCmd = &cobra.Command{
+		Use:   "version",
+		Short: "Print the version number of Hugo",
+		Long:  ` All software has versions. This is Hugo's `,
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("TULB version")
+		},
+	}
+
+	setCmd = &cobra.Command{
+		Use:   "set",
+		Short: "change configuration variables of the app",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("setCmd arg of set: %v\n", args)
+		},
+	}
+)
+
+func Execute() {
+
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func init() {
+	cobra.OnInitialize(initConfig)
+
+	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cobra.yaml)")
+	rootCmd.PersistentFlags().StringVarP(&userLicense, "license", "l", "", "name of license for the project")
+	rootCmd.PersistentFlags().Bool("viper", true, "use Viper for configuration")
+
+	// viper.BindPFlag("author", rootCmd.PersistentFlags().Lookup("author"))
+	// viper.BindPFlag("useViper", rootCmd.PersistentFlags().Lookup("viper"))
+	// viper.SetDefault("author", "NAME HERE <EMAIL ADDRESS>")
+	// viper.SetDefault("license", "apache")
+
+	setCmd.PersistentFlags().StringVar(&Mode, "mode", "manual", "random generate lesson or choose it manually")
+	// viper.BindPFlag("mode", rootCmd.PersistentFlags().Lookup("mode"))
+	setCmd.PersistentFlags().StringVarP(&StoryPath, "spath", "s", "", "path to story file")
+	setCmd.PersistentFlags().StringVarP(&DailyPath, "dpath", "d", "", "path to daily file")
+
+	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(setCmd)
+}
+
+func initConfig() {
+	if cfgFile != "" {
+		// Use config file from the flag.
+		viper.SetConfigFile(cfgFile)
+		fmt.Println("test1")
+	} else {
+		// Find home directory.
+		home, err := os.UserHomeDir()
+		cobra.CheckErr(err)
+		fmt.Println("home path:", home)
+		// Search config in home directory with name ".cobra" (without extension).
+		viper.AddConfigPath(home)
+		viper.SetConfigType("yaml")
+		viper.SetConfigName(".cobra")
+	}
+	
+
+	viper.AutomaticEnv()
+
+	if err := viper.ReadInConfig(); err == nil {
+		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	}
+}

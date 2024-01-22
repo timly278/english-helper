@@ -1,0 +1,24 @@
+---
+mode: random
+story:
+  path: "./resource/stories.txt"
+  duration: 30m
+daily-journal:
+  path: "./daily/path"
+  duration: 30m
+describe-image:
+  path: "./describe-image/path"
+  duration: 30m
+# user can setup path for other type of question
+# example: ../././ielts-part1, part2, part3 questions,....
+answer-question: 
+  path: "./resource/question.txt"
+  duration: 30m
+vocab-sentence:
+  path: "./resource/vocab-sentences.txt"
+  duration: 30s
+alphabet-sentence:
+  path: "./alphabet-sentence/path"
+  duration: 30s
+
+...
