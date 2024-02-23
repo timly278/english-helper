@@ -14,6 +14,7 @@ describe-image:
 answer-question: 
   path: "./resource/question.txt"
   duration: 30m
+  numofquestions: 5
 vocab-sentence:
   path: "./resource/vocab-sentences.txt"
   duration: 30s

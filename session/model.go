@@ -7,7 +7,6 @@ const (
 	MODE_RANDOM = "random"
 )
 
-
 type Story struct {
 	Path     string        `mapstructure:"path"`
 	Duration time.Duration `mapstructure:"duration"`
@@ -24,8 +23,9 @@ type DescribeImage struct {
 }
 
 type AnswerQuestion struct {
-	Path     string        `mapstructure:"path"`
-	Duration time.Duration `mapstructure:"duration"`
+	Path           string        `mapstructure:"path"`
+	NumOfQuestions int           `mapstructure:"numofquestions"`
+	Duration       time.Duration `mapstructure:"duration"`
 }
 
 type VocabSentence struct {
