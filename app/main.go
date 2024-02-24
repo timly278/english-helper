@@ -15,9 +15,9 @@ func main() {
 	if conf.Mode == session.MODE_MANUAL {
 		fmt.Println("not implement")
 	} else {
-		fmt.Println("Your today's lesson is:")
+		// fmt.Println("Your today's lesson is:")
 		// conf.RandomSession()
-		session.DoAnswerQuestion(conf)
+		session.DoVocabSentence(conf)
 	}
 }
 

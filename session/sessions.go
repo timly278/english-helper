@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github/timly278/english-helper/clock"
 	"github/timly278/english-helper/service"
+	"strings"
 )
 
 var session = []func(*Config){
@@ -30,7 +31,7 @@ func DoStory(c *Config) {
 	service.PrintOut(topic[0])
 	AskForReady()
 	clock.StartTimer(c.Story.Duration)
-	clock.Sound()
+	clock.Sound(c.SoundPath)
 }
 
 func DoAnswerQuestion(c *Config) {
@@ -41,17 +42,38 @@ func DoAnswerQuestion(c *Config) {
 	questions, err := service.GetRandomDash(data, c.AnswerQuestion.NumOfQuestions)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 	for i := 0; i < c.AnswerQuestion.NumOfQuestions; i++ {
 		fmt.Printf("%d - %s\n\n", i+1, questions[i])
 	}
 	fmt.Printf("******************************\n")
 	AskForReady()
-	clock.StartTimer(c.Story.Duration)
-	clock.Sound()
+	clock.StartTimer(c.AnswerQuestion.Duration)
+	clock.Sound(c.SoundPath)
 }
 
 func DoVocabSentence(c *Config) {
+	data := service.ReadFile(c.VocabSentence.Path)
+	questions, err := service.GetRandomDash(data, 1)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Printf("\n******************************\n")
+	fmt.Println("welcome to vocab sentence session")
+	fmt.Printf("******************************\n")
+
+	AskForReady()
+	words := strings.Split(questions[0], ", ")
+	for _, w := range words {
+		fmt.Printf("%s\n", w)
+		clock.StartTimer(c.VocabSentence.Duration)
+		fmt.Printf("\r--------------- next -------------\n")
+	}
+	fmt.Printf("\r")
+	fmt.Println("Finish!")
+	clock.Sound(c.SoundPath)
 
 }
 
@@ -72,7 +94,7 @@ func DoDailyJournal(c *Config) {
 func AskForReady() {
 	var key string
 	for {
-		fmt.Println("Are you ready? y/n: ")
+		fmt.Printf("Are you ready? y/n: ")
 		fmt.Scan(&key)
 		if key == "y" || key == "Y" {
 			break

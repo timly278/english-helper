@@ -1,5 +1,6 @@
 ---
 mode: random
+sound_path: ./ring.mp3
 story:
   path: "./resource/stories.txt"
   duration: 30m
@@ -17,7 +18,7 @@ answer-question:
   numofquestions: 5
 vocab-sentence:
   path: "./resource/vocab-sentences.txt"
-  duration: 30s
+  duration: 4s
 alphabet-sentence:
   path: "./alphabet-sentence/path"
   duration: 30s

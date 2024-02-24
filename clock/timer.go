@@ -11,36 +11,29 @@ import (
 	"github.com/gopxl/beep/speaker"
 )
 
-const (
-	SOUND_PATH = "./resource/sound1.mp3"
-)
-
 func StartTimer(duration time.Duration) bool {
 
 	// set ticker for count down clock.
 	ticker := time.NewTicker(time.Second)
-	done := make(chan bool)
-	go func() {
-		for {
-			select {
-			case <-done:
-				return
-			case t := <-ticker.C:
-				_ = t
-				fmt.Printf("\r%d:%d ", int(duration.Minutes()), int(duration.Seconds())%60)
-				duration = duration - time.Second
-			}
+	for t := range ticker.C {
+		_ = t
+		fmt.Printf("\r%d:%d ", int(duration.Minutes()), int(duration.Seconds())%60)
+		duration = duration - time.Second
+		if duration <= 0 {
+			ticker.Stop()
+			fmt.Printf("\r0:1 ")
+			time.Sleep(time.Second)
+			fmt.Printf("\r0:0 ")
+			time.Sleep(time.Second)
+			break
 		}
-	}()
-	time.Sleep(duration)
-	ticker.Stop()
-	fmt.Printf("\n")
-	done <- true
+	}
+	fmt.Printf("\r")
 	return true
 }
 
-func Sound() {
-	MakeSound(SOUND_PATH)
+func Sound(path string) {
+	MakeSound(path)
 }
 
 func MakeSound(path string) {

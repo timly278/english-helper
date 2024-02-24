@@ -8,13 +8,13 @@ import (
 )
 
 const (
-	SEPARATE_STRING = "\n- "
+	SEPARATE_STRING = "- "
 )
 
 // GetRandomDash
 func GetRandomDash(data []byte, n int) ([]string, error) {
-	dashes := strings.Split(string(data), SEPARATE_STRING)
-	dashes = removeEmptyLine(dashes)
+	temp := strings.Trim(string(data), "\n")
+	dashes := strings.Split(temp, SEPARATE_STRING)
 
 	if n > len(dashes) {
 		return nil, errors.New("too few data in the setup, please add more")
@@ -45,7 +45,7 @@ func PrintOut(data string) {
 	fmt.Printf("\n******************************\n")
 }
 
-func removeEmptyLine(data []string) []string {
+func RemoveEmptyLine(data []string) []string {
 
 	var result []string
 	for _, v := range data {

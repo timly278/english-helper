@@ -3,6 +3,7 @@ package session
 import "github.com/spf13/viper"
 
 type Config struct {
+	SoundPath        string           `mapstructure:"sound_path"`
 	Mode             string           `mapstructure:"mode"`
 	Story            Story            `mapstructure:"story"`
 	DailyJournal     DailyJournal     `mapstructure:"daily-journal"`
