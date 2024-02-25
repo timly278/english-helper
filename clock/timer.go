@@ -11,25 +11,42 @@ import (
 	"github.com/gopxl/beep/speaker"
 )
 
-func StartTimer(duration time.Duration) bool {
-
-	// set ticker for count down clock.
-	ticker := time.NewTicker(time.Second)
-	for t := range ticker.C {
-		_ = t
-		fmt.Printf("\r%d:%d ", int(duration.Minutes()), int(duration.Seconds())%60)
-		duration = duration - time.Second
-		if duration <= 0 {
-			ticker.Stop()
-			fmt.Printf("\r0:1 ")
-			time.Sleep(time.Second)
-			fmt.Printf("\r0:0 ")
-			time.Sleep(time.Second)
-			break
+func StartTimer(duration time.Duration) {
+	// Start the countdown timer
+	for duration >= 0 {
+		fmt.Printf("\r%d:%02d ", int(duration.Minutes()), int(duration.Seconds())%60)
+		select {
+		case <-time.After(time.Second):
+			duration -= time.Second
+		case <-time.After(time.Millisecond * 100):
+			// Check for user input asynchronously every 100 milliseconds
+			select {
+			case key := <-getKey():
+				switch key {
+				case '\r': // Enter key
+					return // Stop the timer
+				case ' ': // Space key
+					fmt.Print("\rTimer paused. Press Space again to resume.")
+					<-getKey() // Wait for another key press
+				}
+			default:
+				// No input, continue the timer
+			}
 		}
 	}
-	fmt.Printf("\r")
-	return true
+
+	// Final message when timer ends
+	fmt.Printf("\r0:00\n")
+}
+
+func getKey() <-chan rune {
+	ch := make(chan rune)
+	go func() {
+		var b [1]byte
+		os.Stdin.Read(b[:])
+		ch <- rune(b[0])
+	}()
+	return ch
 }
 
 func Sound(path string) {

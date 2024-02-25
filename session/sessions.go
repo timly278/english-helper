@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github/timly278/english-helper/clock"
 	"github/timly278/english-helper/service"
+	"math/rand"
 	"strings"
 )
 
@@ -71,20 +72,28 @@ func DoVocabSentence(c *Config) {
 		clock.StartTimer(c.VocabSentence.Duration)
 		fmt.Printf("\r--------------- next -------------\n")
 	}
-	fmt.Printf("\r")
+	// fmt.Printf("\r")
 	fmt.Println("Finish!")
 	clock.Sound(c.SoundPath)
-
-}
-
-func DoDescribeImage(c *Config) {
-
 }
 
 // DoAlphabet shows a random letter and user would make a sentence with it
 // within a short specified time
 func DoAlphabet(c *Config) {
-
+	alphabet := "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	perm := rand.Perm(len(alphabet))
+	fmt.Printf("\n******************************\n")
+	fmt.Println("welcome to Alphabet sentence session")
+	fmt.Printf("******************************\n")
+	AskForReady()
+	for i, v := range perm {
+		fmt.Printf("letter[%d] is: %s\n", i, string(alphabet[v]))
+		clock.StartTimer(c.VocabSentence.Duration)
+		fmt.Printf("\r--------------- next -------------\n")
+	}
+	// fmt.Printf("\r")
+	fmt.Println("Finish!")
+	clock.Sound(c.SoundPath)
 }
 
 func DoDailyJournal(c *Config) {

@@ -17,7 +17,7 @@ func main() {
 	} else {
 		// fmt.Println("Your today's lesson is:")
 		// conf.RandomSession()
-		session.DoVocabSentence(conf)
+		session.DoDescribeImage(conf)
 	}
 }
 
