@@ -15,15 +15,22 @@ const (
 func GetRandomDash(data []byte, n int) ([]string, error) {
 	temp := strings.Trim(string(data), "\n")
 	dashes := strings.Split(temp, SEPARATE_STRING)
+	dashes = dashes[1:]
+
+	// TODO: Ignore commented lines using '#'.
+	// for i, v := range dashes {
+	// 	fmt.Printf("dashes[%d]: %s\n", i, v)
+	// }
+	// return nil, fmt.Errorf("exit")
 
 	if n > len(dashes) {
 		return nil, errors.New("too few data in the setup, please add more")
 	}
 
-	islice := RandomIntSlice(n, 0, len(dashes)-1)
+	iSlice := RandomIntSlice(n, 0, len(dashes)-1)
 	result := make([]string, len(dashes))
 
-	for i, v := range islice {
+	for i, v := range iSlice {
 		result[i] = dashes[v]
 	}
 

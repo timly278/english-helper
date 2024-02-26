@@ -11,7 +11,7 @@ import (
 	"github.com/gopxl/beep/speaker"
 )
 
-func StartTimer(duration time.Duration) {
+func StartTimer(duration time.Duration) bool {
 	Enter := make(chan bool, 1)
 	tick := time.NewTicker(time.Second)
 	isRunning := true
@@ -25,9 +25,10 @@ func StartTimer(duration time.Duration) {
 				Enter <- true
 				return
 
-			case '2', ' ':
+			case '2', ' ', '\n':
 				if isRunning {
 					tick.Stop()
+					fmt.Printf("!stopped! press Space + ⏎ to continue ...")
 					isRunning = false
 				} else {
 					tick.Reset(time.Second)
@@ -40,9 +41,9 @@ func StartTimer(duration time.Duration) {
 		select {
 		case isEnter := <-Enter:
 			if isEnter {
-
-				return
+				return false
 			}
+
 		case <-tick.C:
 			fmt.Printf("\r%d:%02d ", int(duration.Minutes()), int(duration.Seconds())%60)
 			duration -= time.Second
@@ -50,6 +51,7 @@ func StartTimer(duration time.Duration) {
 	}
 
 	fmt.Printf("\r0:00\n")
+	return true
 }
 
 func Sound(path string) {
