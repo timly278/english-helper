@@ -12,41 +12,44 @@ import (
 )
 
 func StartTimer(duration time.Duration) {
-	// Start the countdown timer
-	for duration >= 0 {
-		fmt.Printf("\r%d:%02d ", int(duration.Minutes()), int(duration.Seconds())%60)
-		select {
-		case <-time.After(time.Second):
-			duration -= time.Second
-		case <-time.After(time.Millisecond * 100):
-			// Check for user input asynchronously every 100 milliseconds
-			select {
-			case key := <-getKey():
-				switch key {
-				case '\r': // Enter key
-					return // Stop the timer
-				case ' ': // Space key
-					fmt.Print("\rTimer paused. Press Space again to resume.")
-					<-getKey() // Wait for another key press
+	Enter := make(chan bool, 1)
+	tick := time.NewTicker(time.Second)
+	isRunning := true
+	var b []byte = make([]byte, 1)
+
+	go func() {
+		for {
+			os.Stdin.Read(b)
+			switch b[0] {
+			case '1':
+				Enter <- true
+				return
+
+			case '2', ' ':
+				if isRunning {
+					tick.Stop()
+					isRunning = false
+				} else {
+					tick.Reset(time.Second)
+					isRunning = true
 				}
-			default:
-				// No input, continue the timer
 			}
+		}
+	}()
+	for duration >= 0 {
+		select {
+		case isEnter := <-Enter:
+			if isEnter {
+
+				return
+			}
+		case <-tick.C:
+			fmt.Printf("\r%d:%02d ", int(duration.Minutes()), int(duration.Seconds())%60)
+			duration -= time.Second
 		}
 	}
 
-	// Final message when timer ends
 	fmt.Printf("\r0:00\n")
-}
-
-func getKey() <-chan rune {
-	ch := make(chan rune)
-	go func() {
-		var b [1]byte
-		os.Stdin.Read(b[:])
-		ch <- rune(b[0])
-	}()
-	return ch
 }
 
 func Sound(path string) {

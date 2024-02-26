@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github/timly278/english-helper/clock"
 	"github/timly278/english-helper/session"
 	"os"
+	"time"
 )
 
 func main() {
@@ -17,7 +19,8 @@ func main() {
 	} else {
 		// fmt.Println("Your today's lesson is:")
 		// conf.RandomSession()
-		session.DoDescribeImage(conf)
+		// session.DoAlphabet(conf)
+		clock.StartTimer(100 * time.Second)
 	}
 }
 
